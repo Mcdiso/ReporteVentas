@@ -21,6 +21,9 @@ def get_databases():
     allowed_databases = {
         "adEGA_INDUSTRIAL_ZONA": "BAJIO (LA FIERA)",
         "adEGA_INDUSTRIAL_ZONA_NORTE": "NORTE (DORADOS)",
+        "adEGA_INDUSTRIAL_ELECT": "ELECTRICO (TODOS)",
+        "adEGA_INDUSTRIAL_QUERE": "QUERETARO (GALLOS)",
+        "adEGA_INDUSTRIAL_TIJUA": "TIJUANA (XOLOS)"
     }
 
     try:
@@ -51,6 +54,9 @@ def get_agents(database):
     database_mapping = {
         "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
         "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
+        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
+        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
     }
 
     try:
@@ -91,6 +97,9 @@ def execute_global_report_query(database, selected_agent, start_date, end_date):
     database_mapping = {
         "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
         "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
+        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
+        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
     }
 
     try:
@@ -225,6 +234,9 @@ def execute_client_report_query(database, selected_agent, start_date, end_date):
     database_mapping = {
         "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
         "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
+        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
+        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
     }
 
     try:
@@ -352,6 +364,9 @@ def execute_partida_report_query(database, selected_agent, start_date, end_date)
     database_mapping = {
         "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
         "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
+        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
+        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
     }
 
     try:
