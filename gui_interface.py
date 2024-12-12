@@ -61,6 +61,10 @@ def create_report_type_selection_window(parent_window, database, agent, start_da
 
     client_button = tk.Button(frame, text="Reporte de Clientes", command=generate_client, font=("Arial", 12), bg="#FFB545", fg="white", width=20, relief="flat")
     client_button.grid(row=3, column=0, columnspan=2, pady=10)
+    
+    # Botón de salida
+    exit_button = tk.Button(frame, text="Salir", command=window.quit, font=("Arial", 12), bg="#E94E77", fg="white", width=20, relief="flat")
+    exit_button.grid(row=4, column=0, columnspan=2, pady=10)
 
     # Firma
     signature = tk.Label(window, text="By: Ing. Jesús Mena", font=("Arial", 10), fg="gray", bg="white")
