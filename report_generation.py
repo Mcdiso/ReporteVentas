@@ -2,7 +2,7 @@ from tkinter import messagebox
 import openpyxl
 from db_connection import execute_global_report_query, execute_client_report_query, execute_partida_report_query
 
-def generate_global_report(window, database, selected_agent, start_date, end_date):
+def generate_global_report(database, selected_agent, start_date, end_date):
     """Generar el reporte global (concentrado) de ventas"""
     try:
         data = execute_global_report_query(database, selected_agent, start_date, end_date)
@@ -25,7 +25,7 @@ def generate_global_report(window, database, selected_agent, start_date, end_dat
     except Exception as e:
         messagebox.showerror("Error", f"Hubo un error al generar el reporte global: {e}")
 
-def generate_client_report(window, database, selected_agent, start_date, end_date):
+def generate_client_report(database, selected_agent, start_date, end_date):
     """Generar el reporte por cliente"""
     try:
         data = execute_client_report_query(database, selected_agent, start_date, end_date)
