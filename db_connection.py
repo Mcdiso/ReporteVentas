@@ -2,9 +2,9 @@ import pyodbc
 from tkinter import messagebox
 
 # Variables de conexión (ajustar según tu configuración)
-SERVER = "MSI\\COMPAC"
+SERVER = path = r"SRVEGA\CONTPAQ"
 USER = "sa"
-PASSWORD = "compac$1"
+PASSWORD = "KompAc2024#."
 
 def test_connection():
     """Probar la conexión a la base de datos"""
@@ -19,11 +19,11 @@ def test_connection():
 def get_databases():
     """Obtenemos las bases de datos permitidas en el servidor SQL"""
     allowed_databases = {
-        "adEGA_INDUSTRIAL_ZONA": "BAJIO (LA FIERA)",
-        "adEGA_INDUSTRIAL_ZONA_NORTE": "NORTE (DORADOS)",
-        "adEGA_INDUSTRIAL_ELECT": "ELECTRICO (TODOS)",
-        "adEGA_INDUSTRIAL_QUERE": "QUERETARO (GALLOS)",
-        "adEGA_INDUSTRIAL_TIJUA": "TIJUANA (XOLOS)"
+        "adEGA_BAJIO": "BAJIO (LA FIERA)",
+        "adEGA_NORTE": "NORTE (DORADOS)",
+        "adEGA_INDUSTRIAL": "ELECTRICO (TODOS)",
+        "adEGA_QUERETARO": "QUERETARO (GALLOS)",
+        "adEGA_TIJUANA": "TIJUANA (XOLOS)"
     }
 
     try:
@@ -52,11 +52,11 @@ def get_databases():
 def get_agents(database):
     """Obtener los agentes de ventas de la base de datos"""
     database_mapping = {
-        "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
-        "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
-        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
-        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
-        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
+        "BAJIO (LA FIERA)": "adEGA_BAJIO",
+        "NORTE (DORADOS)": "adEGA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL", 
+        "QUERETARO (GALLOS)": "adEGA_QUERETARO",
+        "TIJUANA (XOLOS)" : "adEGA_TIJUANA"
     }
 
     try:
@@ -66,7 +66,7 @@ def get_agents(database):
             raise Exception(f"La base de datos '{database}' no está configurada correctamente.")
 
         conn = pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={SERVER};DATABASE={tech_db_name};UID={USER};PWD={PASSWORD}')
-        query = "SELECT DISTINCT CNOMBREAGENTE FROM admAgentes"
+        query = "SELECT DISTINCT CNOMBREAGENTE FROM admAgentes where CTIPOAGENTE in (1,2)"
         cursor = conn.cursor()
         cursor.execute(query)
         agents = [row[0] for row in cursor.fetchall()]
@@ -95,11 +95,11 @@ def execute_global_report_query(database, selected_agent, start_date, end_date):
     """Ejecutar la consulta SQL para obtener los datos del reporte global sin incluir 'Flete'"""
     # Mapeo de nombres amigables a nombres técnicos para la conexión
     database_mapping = {
-        "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
-        "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
-        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
-        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
-        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
+        "BAJIO (LA FIERA)": "adEGA_BAJIO",
+        "NORTE (DORADOS)": "adEGA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL", 
+        "QUERETARO (GALLOS)": "adEGA_QUERETARO",
+        "TIJUANA (XOLOS)" : "adEGA_TIJUANA"
     }
 
     try:
@@ -208,7 +208,14 @@ def execute_global_report_query(database, selected_agent, start_date, end_date):
             AND d.CCANCELADO = 0
             AND ag.CNOMBREAGENTE = ?
             AND d.CFECHA BETWEEN ? AND ?
-            AND d.CIDCONCEPTODOCUMENTO IN (4, 5, 3003, 3035)
+            AND (
+        -- Filtro por empresa
+        ('EGA INDUSTRIAL BAJIO' = 'EGA INDUSTRIAL BAJIO' AND d.CIDCONCEPTODOCUMENTO IN (4, 5, 3003, 3035)) OR
+        ('EGA INDUSTRIAL ELECTRICO' = 'EGA INDUSTRIAL ELECTRICO' AND d.CIDCONCEPTODOCUMENTO IN (3011, 3115, 3014, 3118, 3008, 3116, 3117, 3010, 3009, 3120, 5, 3119, 3241, 3121, 3012, 4)) OR
+        ('EGA INDUSTRIAL NORTE' = 'EGA INDUSTRIAL NORTE' AND d.CIDCONCEPTODOCUMENTO IN (5, 3025, 3037, 3028, 3101, 3005, 3004, 3009, 3010, 4)) OR
+        ('EGA INDUSTRIAL QUERETARO' = 'EGA INDUSTRIAL QUERETARO' AND d.CIDCONCEPTODOCUMENTO IN (4, 3007)) OR
+        ('EGA INDUSTRIAL TIJUANA' = 'EGA INDUSTRIAL TIJUANA' AND d.CIDCONCEPTODOCUMENTO IN (4, 3005))
+    )
         GROUP BY 
             d.CSERIEDOCUMENTO, 
             d.CFOLIO, 
@@ -232,11 +239,11 @@ def execute_client_report_query(database, selected_agent, start_date, end_date):
     """Ejecutar la consulta SQL para obtener los datos del reporte por cliente"""
     # Mapeo de nombres amigables a nombres técnicos para la conexión
     database_mapping = {
-        "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
-        "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
-        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
-        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
-        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
+        "BAJIO (LA FIERA)": "adEGA_BAJIO",
+        "NORTE (DORADOS)": "adEGA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL", 
+        "QUERETARO (GALLOS)": "adEGA_QUERETARO",
+        "TIJUANA (XOLOS)" : "adEGA_TIJUANA"
     }
 
     try:
@@ -341,7 +348,14 @@ def execute_client_report_query(database, selected_agent, start_date, end_date):
             AND d.CCANCELADO = 0
             AND ag.CNOMBREAGENTE = ?
             AND d.CFECHA BETWEEN ? AND ?
-            AND d.CIDCONCEPTODOCUMENTO IN (4, 5, 3003, 3035)
+            AND (
+        -- Filtro por empresa
+        ('EGA INDUSTRIAL BAJIO' = 'EGA INDUSTRIAL BAJIO' AND d.CIDCONCEPTODOCUMENTO IN (4, 5, 3003, 3035)) OR
+        ('EGA INDUSTRIAL ELECTRICO' = 'EGA INDUSTRIAL ELECTRICO' AND d.CIDCONCEPTODOCUMENTO IN (3011, 3115, 3014, 3118, 3008, 3116, 3117, 3010, 3009, 3120, 5, 3119, 3241, 3121, 3012, 4)) OR
+        ('EGA INDUSTRIAL NORTE' = 'EGA INDUSTRIAL NORTE' AND d.CIDCONCEPTODOCUMENTO IN (5, 3025, 3037, 3028, 3101, 3005, 3004, 3009, 3010, 4)) OR
+        ('EGA INDUSTRIAL QUERETARO' = 'EGA INDUSTRIAL QUERETARO' AND d.CIDCONCEPTODOCUMENTO IN (4, 3007)) OR
+        ('EGA INDUSTRIAL TIJUANA' = 'EGA INDUSTRIAL TIJUANA' AND d.CIDCONCEPTODOCUMENTO IN (4, 3005))
+    )
         GROUP BY 
             d.CRAZONSOCIAL, 
             ag.CNOMBREAGENTE
@@ -362,11 +376,11 @@ def execute_client_report_query(database, selected_agent, start_date, end_date):
 def execute_partida_report_query(database, selected_agent, start_date, end_date):
     """Ejecutar la consulta SQL para obtener los datos del reporte por partida"""
     database_mapping = {
-        "BAJIO (LA FIERA)": "adEGA_INDUSTRIAL_ZONA",
-        "NORTE (DORADOS)": "adEGA_INDUSTRIAL_ZONA_NORTE",
-        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL_ELECT", 
-        "QUERETARO (GALLOS)": "adEGA_INDUSTRIAL_QUERE",
-        "TIJUANA (XOLOS)" : "adEGA_INDUSTRIAL_TIJUA"
+        "BAJIO (LA FIERA)": "adEGA_BAJIO",
+        "NORTE (DORADOS)": "adEGA_NORTE",
+        "ELECTRICO (TODOS)": "adEGA_INDUSTRIAL", 
+        "QUERETARO (GALLOS)": "adEGA_QUERETARO",
+        "TIJUANA (XOLOS)" : "adEGA_TIJUANA"
     }
 
     try:
@@ -473,7 +487,14 @@ def execute_partida_report_query(database, selected_agent, start_date, end_date)
         WHERE 
             d.CIDDOCUMENTODE = 4
             AND d.CCANCELADO = 0
-            AND d.CIDCONCEPTODOCUMENTO IN (4, 5, 3003, 3035)
+            AND (
+        -- Filtro por empresa
+        ('EGA INDUSTRIAL BAJIO' = 'EGA INDUSTRIAL BAJIO' AND d.CIDCONCEPTODOCUMENTO IN (4, 5, 3003, 3035)) OR
+        ('EGA INDUSTRIAL ELECTRICO' = 'EGA INDUSTRIAL ELECTRICO' AND d.CIDCONCEPTODOCUMENTO IN (3011, 3115, 3014, 3118, 3008, 3116, 3117, 3010, 3009, 3120, 5, 3119, 3241, 3121, 3012, 4)) OR
+        ('EGA INDUSTRIAL NORTE' = 'EGA INDUSTRIAL NORTE' AND d.CIDCONCEPTODOCUMENTO IN (5, 3025, 3037, 3028, 3101, 3005, 3004, 3009, 3010, 4)) OR
+        ('EGA INDUSTRIAL QUERETARO' = 'EGA INDUSTRIAL QUERETARO' AND d.CIDCONCEPTODOCUMENTO IN (4, 3007)) OR
+        ('EGA INDUSTRIAL TIJUANA' = 'EGA INDUSTRIAL TIJUANA' AND d.CIDCONCEPTODOCUMENTO IN (4, 3005))
+    )
             AND ag.CNOMBREAGENTE = ?
             AND d.CFECHA BETWEEN ? AND ?
         GROUP BY 
